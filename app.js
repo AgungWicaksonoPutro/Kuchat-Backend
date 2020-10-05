@@ -19,6 +19,11 @@ app.use('/uploads', express.static('./uploads-img'))
 
 io.on('connection', socket =>{
     console.log('client connect')
+    socket.on('setupUserLogin', data =>{
+        console.log('user baru join adalah ' + data.id)
+        socket.join('user:'+data.id)
+        socket.broadcast.to(data.room).emit('notif', 'both: user join... ' + data.username)
+    })
 
     socket.on('disconect', ()=>{
         console.log('user disconect')

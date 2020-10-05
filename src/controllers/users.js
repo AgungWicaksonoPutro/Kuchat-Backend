@@ -61,6 +61,20 @@ const users = {
         .catch((err)=>{
             console.log(err)
         })
+    },
+    getUserById: (req, res) => {
+        const id = req.params.id
+        modelUsers.getUserById(id)
+            .then((result)=>{
+                if(result != ''){
+                    helpers.response(res, result, 200, null)
+                } else {
+                    helpers.response(res, {message: 'Not Found'}, 404, null)
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+              })
     }
 }
 

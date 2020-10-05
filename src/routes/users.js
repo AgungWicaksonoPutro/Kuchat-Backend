@@ -6,5 +6,6 @@ const multer = require('../middlewares/multer')
 router
     .post('/login', controllerUsers.login)
     .post('/register', multer.upload.single('imageUser'), controllerUsers.register)
+    .get('/:id', controllerUsers.getUserById)
 
 module.exports = router

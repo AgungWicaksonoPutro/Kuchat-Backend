@@ -22,6 +22,17 @@ const user = {
                 }
             })
         })
+    },
+    getUserById: (id) => {
+        return new Promise((resolve, reject)=>{
+            connection.query('SELECT * FROM profiles WHERE idUser = ?', id , (err, result)=>{
+                if(!err){
+                    resolve(result)
+                } else {
+                    reject(new Error(err))
+                }
+            })
+        })
     }
 }
 
