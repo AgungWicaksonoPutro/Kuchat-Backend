@@ -40,11 +40,11 @@ const users = {
         const {email, password} = req.body
         modelUsers.getUser(email)
         .then((result)=>{
-            if(result.length<1) return helpers.response(res, {message: 'Email Not Found!'}, 200, null)
+            if(result.length<1) return helpers.response(res, {message: 'Email Not Found!'}, 401, null)
             const user = result[0]
             const hash = user.password
             bcrypt.compare(password, hash).then((resCompare)=>{
-                if(!resCompare) return helpers.response(res, {message: 'Password Wrong!'}, 200, null)
+                if(!resCompare) return helpers.response(res, {message: 'Password Wrong!'}, 401, null)
                 const payload = {
                     id: user.idUser,
                     email: user.email,
@@ -75,6 +75,28 @@ const users = {
             .catch((err) => {
                 console.log(err)
               })
+    },
+    updateUser: (req, res) => {
+        const id = req.params.id
+        const { name, email, bio } = req.body
+        const data = {
+            name, 
+            email, 
+            bio,
+            updateAt: new Date()
+        }
+        if (req.file) {
+            data.imageUser = `http://localhost:3400/uploads/${req.file.filename}`
+        }
+        console.log(data)
+        modelUsers.updateUser(id, data)
+            .then((result) => {
+                const resultChats = result
+                helpers.response(res, resultChats, 200, null)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
 }
 
