@@ -15,7 +15,23 @@ const contacts = {
             .catch((err) => {
                 console.log(err)
             })
-    }
+    },
+    getAllContact: (req, res) => {
+        contactModels.getAllFriend()
+            .then((result) => {
+                if (result != '') {
+                    helpers.response(res, result, 200, null)
+                } else {
+                    helpers.response(res, { message: 'Data Not Found!' }, 401, null)
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    },
+     AddContact: (req, res) => {
+         
+     }
 }
 
 module.exports = contacts

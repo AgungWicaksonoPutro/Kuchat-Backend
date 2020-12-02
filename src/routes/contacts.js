@@ -5,5 +5,6 @@ const auth = require('../middlewares/auth')
 
 router
     .get('/:id', contactController.getContactById)
+    .get('/', contactController.getAllContact)
 
 module.exports = router

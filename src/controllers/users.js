@@ -11,6 +11,7 @@ const users = {
             name,
             email,
             bio: `I'am ready on kuchat`,
+            userName: '@' + name,
             password,
             createAt: new Date(),
             updateAt: new Date
@@ -88,11 +89,23 @@ const users = {
         if (req.file) {
             data.imageUser = `http://localhost:3400/uploads/${req.file.filename}`
         }
-        console.log(data)
+        if (req.body.userName) {
+            data.userName = req.body.userName
+        }
         modelUsers.updateUser(id, data)
             .then((result) => {
                 const resultChats = result
                 helpers.response(res, resultChats, 200, null)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    },
+    allUser: (req, res) => {
+        modelUsers.getAllUser()
+            .then((result) => {
+                const resultUser = result
+                helpers.response(res, resultUser, 200, null)
             })
             .catch((err) => {
                 console.log(err)

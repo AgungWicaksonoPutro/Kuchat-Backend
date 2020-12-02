@@ -10,6 +10,7 @@ const io = socket(server)
 const cors = require('cors')
 const routers = require('./src/routes/index')
 const controllerChat = require('./src/models/chats')
+const user = require('./src/controllers/users')
 const userStatus = require('./src/models/users')
 
 app.use(bodyParser.urlencoded({extended: false}))
@@ -26,9 +27,14 @@ io.on('connection', socket =>{
         userStatus.updateUser(id.id, {status: status})
     })
     socket.on('sendMessage', (data, callback)=>{
-        console.log(data)
+        const Message = {}
+        Message.chat = data.chat
+        Message.idSender = data.idSender
+        Message.idContact = data.idContact
+        Message.createAt = data.createAt
         callback(data)
-        controllerChat.insertChat(data)
+        console.log(data.idReceiver)
+        controllerChat.insertChat(Message)
         .then((result)=>{
             io.to('user:' + data.idReceiver).emit('receiveMessage', data)
         })
@@ -37,7 +43,7 @@ io.on('connection', socket =>{
         })
     })
     socket.on('logOut', id =>{
-        userStatus.updateStatus(id.id, { status: new Date() })
+        userStatus.updateUser(id.id, { status: new Date() })
     })
     socket.on('disconnect', () => {
         console.log('user left')

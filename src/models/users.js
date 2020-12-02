@@ -34,6 +34,17 @@ const user = {
             })
         })
     },
+    getAllUser: () => {
+        return new Promise((resolve, reject)=>{
+            connection.query('SELECT * FROM profiles', (err, result)=>{
+                if(!err){
+                    resolve(result)
+                } else {
+                    reject(new Error(err))
+                }
+            })
+        })
+    },
     updateUser: (id, data) => {
         return new Promise((resolve, reject) => {
             connection.query('UPDATE profiles SET ? WHERE idUser = ?', [data, id], (err, result) => {

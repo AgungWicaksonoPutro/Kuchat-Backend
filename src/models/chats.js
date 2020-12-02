@@ -3,7 +3,7 @@ const connection = require('../config/db')
 const chats = {
     getChatById: (id) => {
         return new Promise((resolve, reject) => {
-            connection.query(`SELECT * FROM chats WHERE idSender = ?`, id ,(err, result) => {
+            connection.query(`SELECT chats.*, profiles.imageUser, profiles.name, profiles.createAt, profiles.status, contacts.* FROM chats JOIN profiles ON chats.idSender = profiles.idUser JOIN contacts ON chats.idContact = contacts.id WHERE idSender = ${id} ORDER BY chats.createAt DESC`,(err, result) => {
                 if (!err) {
                     resolve(result)
                 } else {
@@ -13,27 +13,25 @@ const chats = {
         })
     },
 
-    getAllchat: (idSender, sort, limit) => {
+    getAllchat: (id, sort, limit) => {
         let message = ''
         let sortMessage = ''
         let limits = ''
 
-        if (idSender) {
-            console.log(idSender)
-            message = `WHERE chats.idReceiver=${idSender}`
+        if (id) {
+            message = `WHERE chats.idContact=${id}`
         }
 
         if (sort) {
-            sortMessage = `ORDER BY ${sort} DESC`
+            sortMessage = `ORDER BY chats.createAt ${sort}`
         }
 
         if (limit) {
-            console.log(limit)
             limits = `LIMIT ${limit}`
         }
 
         return new Promise((resolve, reject) => {
-            connection.query(`SELECT * FROM chats ${message} ${sortMessage} ${limits}`, (err, result) => {
+            connection.query(`SELECT chats.*, profiles.imageUser, profiles.name, profiles.createAt, profiles.status, contacts.* FROM chats JOIN profiles ON chats.idSender = profiles.idUser JOIN contacts ON chats.idContact = contacts.id ${message} ${sortMessage} ${limits}`, (err, result) => {
                 if (!err) {
                     resolve(result)
                 } else {
